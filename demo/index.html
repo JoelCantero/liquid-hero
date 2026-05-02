@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Liquid Displacement Demo</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="hero" aria-label="Liquid displacement image transition demo">
+      <canvas id="liquid-canvas" class="liquid-canvas"></canvas>
+
+      <div class="hero__chrome">
+        <p class="eyebrow">WebGL2 liquid displacement</p>
+        <h1>Liquid displacement</h1>
+        <p class="status" id="status">Loading textures...</p>
+      </div>
+
+      <div class="hero__actions" aria-label="Demo controls">
+        <button id="next-image" type="button">Liquid burst</button>
+        <button id="toggle-motion" type="button">Pause motion</button>
+      </div>
+    </main>
+
+    <script src="liquid-displacement.js"></script>
+  </body>
+</html>

@@ -1,0 +1,51 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "create-block/liquid-hero-block",
+	"version": "0.1.0",
+	"title": "Liquid Hero Block",
+	"category": "media",
+	"icon": "format-image",
+	"description": "A cover-style hero that reveals a gallery of images with a liquid displacement effect.",
+	"example": {},
+	"attributes": {
+		"images": {
+			"type": "array",
+			"default": []
+		},
+		"minHeight": {
+			"type": "number",
+			"default": 720
+		},
+		"overlayOpacity": {
+			"type": "number",
+			"default": 0
+		},
+		"contentPosition": {
+			"type": "string",
+			"default": "bottom left"
+		}
+	},
+	"supports": {
+		"align": [ "wide", "full" ],
+		"anchor": true,
+		"html": false,
+		"spacing": {
+			"margin": [ "top", "bottom" ],
+			"padding": true
+		},
+		"color": {
+			"text": true,
+			"background": false
+		},
+		"typography": {
+			"fontSize": true,
+			"lineHeight": true
+		}
+	},
+	"textdomain": "liquid-hero-block",
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css",
+	"viewScript": "file:./view.js"
+}

@@ -1,0 +1,32 @@
+.wp-block-create-block-liquid-hero-block .components-placeholder {
+	width: 100%;
+	min-height: 320px;
+}
+
+.liquid-hero-block__preview-image {
+	z-index: 0;
+}
+
+.liquid-hero-block__thumbs {
+	position: absolute;
+	right: 16px;
+	bottom: 16px;
+	z-index: 3;
+	display: flex;
+	max-width: min(420px, calc(100% - 32px));
+	gap: 8px;
+	overflow: auto;
+	padding: 8px;
+	border: 1px solid rgb(255 255 255 / 30%);
+	border-radius: 6px;
+	background: rgb(0 0 0 / 34%);
+	backdrop-filter: blur(12px);
+}
+
+.liquid-hero-block__thumbs img {
+	width: 48px;
+	height: 48px;
+	flex: 0 0 auto;
+	border-radius: 4px;
+	object-fit: cover;
+}

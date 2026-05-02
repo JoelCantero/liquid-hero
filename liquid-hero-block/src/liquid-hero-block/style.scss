@@ -1,0 +1,107 @@
+.wp-block-create-block-liquid-hero-block {
+	position: relative;
+	display: flex;
+	min-height: 720px;
+	overflow: hidden;
+	background: #111;
+	color: #fff;
+	isolation: isolate;
+
+	&.alignfull {
+		width: 100%;
+	}
+
+	&.is-position-top-left {
+		align-items: flex-start;
+		justify-content: flex-start;
+	}
+
+	&.is-position-top-center {
+		align-items: flex-start;
+		justify-content: center;
+	}
+
+	&.is-position-top-right {
+		align-items: flex-start;
+		justify-content: flex-end;
+	}
+
+	&.is-position-center-left {
+		align-items: center;
+		justify-content: flex-start;
+	}
+
+	&.is-position-center-center {
+		align-items: center;
+		justify-content: center;
+	}
+
+	&.is-position-center-right {
+		align-items: center;
+		justify-content: flex-end;
+	}
+
+	&.is-position-bottom-left {
+		align-items: flex-end;
+		justify-content: flex-start;
+	}
+
+	&.is-position-bottom-center {
+		align-items: flex-end;
+		justify-content: center;
+	}
+
+	&.is-position-bottom-right {
+		align-items: flex-end;
+		justify-content: flex-end;
+	}
+}
+
+.liquid-hero-block__canvas,
+.liquid-hero-block__fallback-image,
+.liquid-hero-block__preview-image {
+	position: absolute;
+	inset: 0;
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.liquid-hero-block__canvas {
+	z-index: 0;
+	touch-action: none;
+}
+
+.liquid-hero-block__fallback-image,
+.liquid-hero-block__preview-image {
+	z-index: -1;
+}
+
+.is-liquid-hero-fallback .liquid-hero-block__fallback-image {
+	z-index: 0;
+}
+
+.liquid-hero-block__overlay {
+	position: absolute;
+	inset: 0;
+	z-index: 1;
+	background: #000;
+	pointer-events: none;
+}
+
+.liquid-hero-block__inner-container {
+	position: relative;
+	z-index: 2;
+	width: min(720px, 100%);
+	padding: clamp(24px, 5vw, 72px);
+	text-shadow: 0 2px 18px rgb(0 0 0 / 45%);
+}
+
+.liquid-hero-block__inner-container > :first-child {
+	margin-top: 0;
+}
+
+.liquid-hero-block__inner-container > :last-child {
+	margin-bottom: 0;
+}
