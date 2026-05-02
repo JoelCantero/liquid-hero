@@ -17,6 +17,10 @@
       "type": "number",
       "default": 720
     },
+    "minHeightUnit": {
+      "type": "string",
+      "default": "px"
+    },
     "overlayOpacity": {
       "type": "number",
       "default": 0
@@ -24,6 +28,10 @@
     "contentPosition": {
       "type": "string",
       "default": "bottom left"
+    },
+    "disableMobileScroll": {
+      "type": "boolean",
+      "default": false
     }
   },
   "supports": {

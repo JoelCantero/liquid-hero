@@ -25,8 +25,11 @@ import {
 	PanelBody,
 	RangeControl,
 	SelectControl,
+	ToggleControl,
 	ToolbarButton,
 	ToolbarGroup,
+	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
+	__experimentalUnitControl as UnitControl,
 } from '@wordpress/components';
 
 /**
@@ -58,6 +61,42 @@ const TEMPLATE = [
 const getPositionClass = ( contentPosition ) =>
 	`is-position-${ contentPosition.replace( /\s+/g, '-' ) }`;
 
+const MIN_HEIGHT_UNITS = [
+	{ value: 'px', label: 'px', default: 720 },
+	{ value: 'vh', label: 'vh', default: 100 },
+];
+
+const MIN_HEIGHT_LIMITS = {
+	px: {
+		min: 320,
+		max: 1080,
+		step: 10,
+	},
+	vh: {
+		min: 20,
+		max: 100,
+		step: 1,
+	},
+};
+
+const getMinHeightValue = ( minHeight, minHeightUnit = 'px' ) =>
+	`${ minHeight }${ minHeightUnit }`;
+
+const parseMinHeightValue = ( value, fallbackUnit = 'px' ) => {
+	const match = String( value || '' )
+		.trim()
+		.match( /^(\d+(?:\.\d+)?)\s*([a-z%]+)?$/i );
+
+	if ( ! match ) {
+		return null;
+	}
+
+	return {
+		minHeight: Number( match[ 1 ] ),
+		minHeightUnit: match[ 2 ] || fallbackUnit,
+	};
+};
+
 const normalizeImages = ( media = [] ) =>
 	media
 		.filter( Boolean )
@@ -86,15 +125,25 @@ const normalizeImages = ( media = [] ) =>
  * @return {Element} Element to render.
  */
 export default function Edit( { attributes, setAttributes } ) {
-	const { images, minHeight, overlayOpacity, contentPosition } = attributes;
+	const {
+		images,
+		minHeight,
+		minHeightUnit,
+		overlayOpacity,
+		contentPosition,
+		disableMobileScroll,
+	} = attributes;
 	const hasImages = images.length > 0;
 	const previewImage = images[ 0 ];
+	const heightUnit = minHeightUnit || 'px';
+	const heightLimits =
+		MIN_HEIGHT_LIMITS[ heightUnit ] || MIN_HEIGHT_LIMITS.px;
 	const blockProps = useBlockProps( {
 		className: `has-custom-content-position ${ getPositionClass(
 			contentPosition
 		) }`,
 		style: {
-			minHeight,
+			minHeight: getMinHeightValue( minHeight, heightUnit ),
 		},
 	} );
 
@@ -157,15 +206,39 @@ export default function Edit( { attributes, setAttributes } ) {
 				<PanelBody
 					title={ __( 'Liquid hero settings', 'liquid-hero-block' ) }
 				>
-					<RangeControl
+					<UnitControl
+						__next40pxDefaultSize
 						label={ __( 'Minimum height', 'liquid-hero-block' ) }
-						value={ minHeight }
+						value={ getMinHeightValue( minHeight, heightUnit ) }
+						units={ MIN_HEIGHT_UNITS }
+						min={ heightLimits.min }
+						max={ heightLimits.max }
+						step={ heightLimits.step }
+						isResetValueOnUnitChange
+						onChange={ ( value ) => {
+							const nextValue = parseMinHeightValue(
+								value,
+								heightUnit
+							);
+
+							if ( nextValue ) {
+								setAttributes( nextValue );
+							}
+						} }
+					/>
+					<ToggleControl
+						label={ __(
+							'Disable mobile page scroll',
+							'liquid-hero-block'
+						) }
+						help={ __(
+							'Prevents vertical page scrolling on mobile when this hero is used as a full viewport section.',
+							'liquid-hero-block'
+						) }
+						checked={ disableMobileScroll }
 						onChange={ ( value ) =>
-							setAttributes( { minHeight: value } )
+							setAttributes( { disableMobileScroll: value } )
 						}
-						min={ 320 }
-						max={ 1080 }
-						step={ 10 }
 					/>
 					<RangeControl
 						label={ __( 'Overlay opacity', 'liquid-hero-block' ) }

@@ -9,6 +9,9 @@ import { InnerBlocks, useBlockProps } from '@wordpress/block-editor';
 const getPositionClass = ( contentPosition ) =>
 	`is-position-${ contentPosition.replace( /\s+/g, '-' ) }`;
 
+const getMinHeightValue = ( minHeight, minHeightUnit = 'px' ) =>
+	`${ minHeight }${ minHeightUnit }`;
+
 /**
  * The save function defines the way in which the different attributes should
  * be combined into the final markup, which is then serialized by the block
@@ -21,7 +24,14 @@ const getPositionClass = ( contentPosition ) =>
  * @return {Element} Element to render.
  */
 export default function save( { attributes } ) {
-	const { images, minHeight, overlayOpacity, contentPosition } = attributes;
+	const {
+		images,
+		minHeight,
+		minHeightUnit,
+		overlayOpacity,
+		contentPosition,
+		disableMobileScroll,
+	} = attributes;
 	const hasImages = images.length > 0;
 	const fallbackImage = images[ 0 ];
 	const blockProps = useBlockProps.save( {
@@ -29,9 +39,12 @@ export default function save( { attributes } ) {
 			contentPosition
 		) }`,
 		style: {
-			minHeight,
+			minHeight: getMinHeightValue( minHeight, minHeightUnit || 'px' ),
 		},
 		'data-liquid-images': JSON.stringify( images ),
+		'data-liquid-lock-mobile-scroll': disableMobileScroll
+			? 'true'
+			: undefined,
 	} );
 
 	return (

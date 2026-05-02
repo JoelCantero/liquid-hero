@@ -24,6 +24,10 @@ return array(
 				'type' => 'number',
 				'default' => 720
 			),
+			'minHeightUnit' => array(
+				'type' => 'string',
+				'default' => 'px'
+			),
 			'overlayOpacity' => array(
 				'type' => 'number',
 				'default' => 0
@@ -31,6 +35,10 @@ return array(
 			'contentPosition' => array(
 				'type' => 'string',
 				'default' => 'bottom left'
+			),
+			'disableMobileScroll' => array(
+				'type' => 'boolean',
+				'default' => false
 			)
 		),
 		'supports' => array(

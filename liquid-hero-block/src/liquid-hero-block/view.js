@@ -1,6 +1,7 @@
 /* global Image, requestAnimationFrame */
 
 const BLOCK_SELECTOR = '.wp-block-create-block-liquid-hero-block';
+const MOBILE_SCROLL_LOCK_QUERY = '(max-width: 782px)';
 
 const CONFIG = {
 	simulationResolution: 128,
@@ -191,6 +192,88 @@ const SHADERS = {
 		}
 	`,
 };
+
+const scrollLockState = {
+	isLocked: false,
+	scrollY: 0,
+	previousHtmlOverflow: '',
+	previousHtmlOverscrollBehavior: '',
+	previousBodyOverflow: '',
+	previousBodyPosition: '',
+	previousBodyTop: '',
+	previousBodyWidth: '',
+	previousBodyOverscrollBehavior: '',
+};
+
+function lockMobileScroll() {
+	if ( scrollLockState.isLocked ) {
+		return;
+	}
+
+	scrollLockState.isLocked = true;
+	scrollLockState.scrollY = window.scrollY || window.pageYOffset || 0;
+	scrollLockState.previousHtmlOverflow =
+		document.documentElement.style.overflow;
+	scrollLockState.previousHtmlOverscrollBehavior =
+		document.documentElement.style.overscrollBehavior;
+	scrollLockState.previousBodyOverflow = document.body.style.overflow;
+	scrollLockState.previousBodyPosition = document.body.style.position;
+	scrollLockState.previousBodyTop = document.body.style.top;
+	scrollLockState.previousBodyWidth = document.body.style.width;
+	scrollLockState.previousBodyOverscrollBehavior =
+		document.body.style.overscrollBehavior;
+
+	document.documentElement.style.overflow = 'hidden';
+	document.documentElement.style.overscrollBehavior = 'none';
+	document.body.style.overflow = 'hidden';
+	document.body.style.position = 'fixed';
+	document.body.style.top = `-${ scrollLockState.scrollY }px`;
+	document.body.style.width = '100%';
+	document.body.style.overscrollBehavior = 'none';
+}
+
+function unlockMobileScroll() {
+	if ( ! scrollLockState.isLocked ) {
+		return;
+	}
+
+	document.documentElement.style.overflow =
+		scrollLockState.previousHtmlOverflow;
+	document.documentElement.style.overscrollBehavior =
+		scrollLockState.previousHtmlOverscrollBehavior;
+	document.body.style.overflow = scrollLockState.previousBodyOverflow;
+	document.body.style.position = scrollLockState.previousBodyPosition;
+	document.body.style.top = scrollLockState.previousBodyTop;
+	document.body.style.width = scrollLockState.previousBodyWidth;
+	document.body.style.overscrollBehavior =
+		scrollLockState.previousBodyOverscrollBehavior;
+	window.scrollTo( 0, scrollLockState.scrollY );
+
+	scrollLockState.isLocked = false;
+}
+
+function setupMobileScrollLock( roots ) {
+	const hasScrollLockBlock = roots.some(
+		( root ) => root.dataset.liquidLockMobileScroll === 'true'
+	);
+
+	if ( ! hasScrollLockBlock ) {
+		return;
+	}
+
+	const media = window.matchMedia( MOBILE_SCROLL_LOCK_QUERY );
+	const updateScrollLock = () => {
+		if ( media.matches ) {
+			lockMobileScroll();
+		} else {
+			unlockMobileScroll();
+		}
+	};
+
+	updateScrollLock();
+	media.addEventListener( 'change', updateScrollLock );
+	window.addEventListener( 'pagehide', unlockMobileScroll );
+}
 
 class LiquidHero {
 	constructor( root ) {
@@ -919,7 +1002,13 @@ class LiquidHero {
 	}
 }
 
-document.querySelectorAll( BLOCK_SELECTOR ).forEach( ( root ) => {
+const liquidHeroBlocks = Array.from(
+	document.querySelectorAll( BLOCK_SELECTOR )
+);
+
+setupMobileScrollLock( liquidHeroBlocks );
+
+liquidHeroBlocks.forEach( ( root ) => {
 	const liquidHero = new LiquidHero( root );
 	liquidHero.start().catch( () => {
 		root.classList.add( 'is-liquid-hero-fallback' );
